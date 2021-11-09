@@ -4,6 +4,18 @@
 #include <wchar.h>
 typedef HANDLE (__stdcall *Func_SetThreadDpiAwarenessContext) (HANDLE);
 
+Func_SetThreadDpiAwarenessContext
+get_thread_dpi_api ()
+{
+    Func_SetThreadDpiAwarenessContext api_function;
+    HMODULE user32 = LoadLibraryA ("User32.dll");
+
+    api_function = (Func_SetThreadDpiAwarenessContext)GetProcAddress (
+        user32, "SetThreadDpiAwarenessContext");
+    FreeLibrary (user32);
+    return api_function;
+}
+
 int
 grab_screenshot (int all_screens, int includeLayeredWindows)
 {
@@ -14,7 +26,6 @@ grab_screenshot (int all_screens, int includeLayeredWindows)
     DWORD dwBmpSize = 0;
     DWORD rop;
     HANDLE dpiAwareness = NULL;
-    HMODULE user32;
     HANDLE hDIB = NULL;
     char *lpbitmap = NULL;
     HANDLE hFile = NULL;
@@ -30,10 +41,8 @@ grab_screenshot (int all_screens, int includeLayeredWindows)
 
     // added in Windows 10 (1607)
     // loaded dynamically to avoid link errors
-    user32 = LoadLibraryA ("User32.dll");
     SetThreadDpiAwarenessContext_function
-        = (Func_SetThreadDpiAwarenessContext)GetProcAddress (
-            user32, "SetThreadDpiAwarenessContext");
+        = get_thread_dpi_api();
     if (SetThreadDpiAwarenessContext_function != NULL)
         {
             // DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE =
@@ -58,8 +67,6 @@ grab_screenshot (int all_screens, int includeLayeredWindows)
         {
             SetThreadDpiAwarenessContext_function (dpiAwareness);
         }
-
-    FreeLibrary (user32);
 
     bitmap = CreateCompatibleBitmap (screen, width, height);
     if (!bitmap)
