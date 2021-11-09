@@ -1,2 +1,5 @@
 *.bmp
 *.exe
+build_dir/
+_build/
+.vscode

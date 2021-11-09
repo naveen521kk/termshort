@@ -1,8 +1,6 @@
 #include <stdio.h>
-
-#define UNICODE 1
-
 #include <windows.h>
+// should be second
 #include <wchar.h>
 typedef HANDLE (__stdcall *Func_SetThreadDpiAwarenessContext) (HANDLE);
 
