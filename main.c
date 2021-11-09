@@ -9,12 +9,11 @@ grab_screenshot (int all_screens, int includeLayeredWindows)
 {
     int x = 0, y = 0, width, height;
     HBITMAP bitmap;
-    BITMAPCOREHEADER core;
     HDC screen, screen_copy;
     BITMAP bmpScreen;
     DWORD dwBmpSize = 0;
     DWORD rop;
-    HANDLE dpiAwareness;
+    HANDLE dpiAwareness = NULL;
     HMODULE user32;
     HANDLE hDIB = NULL;
     char *lpbitmap = NULL;
@@ -149,6 +148,7 @@ grab_screenshot (int all_screens, int includeLayeredWindows)
 
     // Close the handle for the file that was created.
     CloseHandle (hFile);
+    goto done;
 
 done:
 
