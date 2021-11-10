@@ -3,3 +3,4 @@
 build_dir/
 _build/
 .vscode
+_build_mingw/

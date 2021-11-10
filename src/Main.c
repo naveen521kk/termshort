@@ -1,6 +1,9 @@
 #include "Log.h"
+#include "Utils.h"
 #include <stdio.h>
+#include <string.h>
 #include <windows.h>
+
 // should be second
 #include <wchar.h>
 typedef HANDLE (__stdcall *Func_SetThreadDpiAwarenessContext) (HANDLE);
@@ -177,7 +180,11 @@ main (int argc, char *argv[])
 {
     initialise_logger ();
     log_debug ("Received %d arguments", argc);
-
+    WCHAR *filename;
+    filename = calloc (MAX_PATH, sizeof (WCHAR *));
+    if (filename == NULL){
+        log_error("Memory error", 1);
+    }
     if (argc == 1)
         {
             log_info ("Received no arguments. Choosing interactive mode.");
@@ -185,42 +192,87 @@ main (int argc, char *argv[])
     else
         {
             log_debug ("Received the following arguments: ");
-            for (size_t i = 1; i < argc; i++)
+            for (int i = 1; i < argc; i++)
                 {
                     log_debug ("%d : %s", i, argv[i]);
                 }
+
+            int width, height;
+            int optind;
+            size_t positional_args_no = 0;
+            char **positional_args;
+
+            positional_args = calloc (argc, sizeof (char *));
+            if (positional_args == NULL)
+                {
+                    log_error ("Memory Error. Can't allocate memory.", 1);
+                }
+
+            for (optind = 1; optind < argc; optind++)
+                {
+                    if (starts_with (argv[optind], "--"))
+                        {
+                            if (starts_with (argv[optind], "--width"))
+                                {
+                                    width = convert_char_to_int (
+                                        split_args (argv[optind], "="));
+                                    log_debug ("Setting Width: %d", width);
+                                    continue;
+                                }
+                            if (starts_with (argv[optind], "--height"))
+                                {
+                                    height = convert_char_to_int (
+                                        split_args (argv[optind], "="));
+                                    log_debug ("Setting Height: %d", height);
+                                    continue;
+                                }
+                            if (starts_with (argv[optind], "--debug"))
+                                {
+                                    continue; // handled else where.
+                                }
+                            log_error ("Invalid Argument: %s", 1, argv[optind]);
+                        }
+                    else
+                        {
+                            positional_args[positional_args_no] = malloc (
+                                (strlen (argv[optind]) + 1) * sizeof (char *));
+
+                            if (positional_args == NULL)
+                                {
+                                    log_error ("Memory Error.", 1);
+                                }
+
+                            positional_args[positional_args_no] = argv[optind];
+                            positional_args_no += 1;
+                        }
+                }
+            if (positional_args_no == 0 || positional_args_no > 1)
+                {
+                    for (size_t i = 0; i < positional_args_no; i++)
+                        {
+                            free (positional_args[positional_args_no]);
+                        }
+                    free (positional_args);
+                    if (positional_args_no == 0)
+                        log_error ("Positional argument `file` is missing.", 1);
+                    else
+                        log_error ("Multiple positional arguments found for `file`.", 1);
+                    return 1;
+                }
+
+
+            int nChars = MultiByteToWideChar (CP_UTF8, 0, positional_args[positional_args_no], -1, NULL, 0);
+            if (MultiByteToWideChar(CP_UTF8, 0, positional_args[positional_args_no], -1, (WCHAR*)filename, nChars) != nChars){
+                log_error("Cannot convert string", 1);
+            }
+
+            for (size_t i = 0; i < positional_args_no; i++)
+                {
+                    free (positional_args[positional_args_no]);
+                }
+            free (positional_args);
         }
-    // size_t optind;
-    // BOOL isCaseInsensitive;
-    // for (optind = 1; optind < argc && argv[optind][0] == '-'; optind++)
-    //     {
-    //         switch (argv[optind][1])
-    //             {
-    //             case 'i':
-    //                 isCaseInsensitive = TRUE;
-    //                 break;
-    //             default:
-    //                 fprintf (stderr, "Usage: %s [-i] [file...]\n", argv[0]);
-    //                 exit (EXIT_FAILURE);
-    //             }
-    //     }
-    // argv += optind;
-    // if (!*argv)
-    //     {
-    //         fprintf (stderr, "Positional argument file is missing.\n");
-    //         return 1;
-    //     }
-    // if ((argc - optind) != 1)
-    //     {
-    //         fprintf (stderr, "Need at most one positional argument.\n");
-    //         return 1;
-    //     }
-
-    // WCHAR filename[MAX_PATH];
-    // int a = swprintf(filename, MAX_PATH, L"aaa %p", *argv);
-    // printf("%d %s\n", a, *argv);
-
-    // //wprintf(L"%ls %ls\n", filename, string);
-    // fputws ( filename, stdout );
-    return grab_screenshot (1, 1);
+    int output = grab_screenshot (1, 1);
+    free (filename);
+    return output;
 }
