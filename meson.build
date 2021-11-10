@@ -6,11 +6,4 @@ project(
       'warning_level=3',
     ],
 )
-
-executable(
-    'screenshotter',
-    'main.c',
-    install : true,
-    c_args: ['-DUNICODE=1'],
-    link_args: ['-lgdi32', '-luser32']
-)
+subdir('src')
