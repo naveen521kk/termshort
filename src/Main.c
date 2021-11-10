@@ -1,3 +1,4 @@
+#include "Log.h"
 #include <stdio.h>
 #include <windows.h>
 // should be second
@@ -41,8 +42,7 @@ grab_screenshot (int all_screens, int includeLayeredWindows)
 
     // added in Windows 10 (1607)
     // loaded dynamically to avoid link errors
-    SetThreadDpiAwarenessContext_function
-        = get_thread_dpi_api();
+    SetThreadDpiAwarenessContext_function = get_thread_dpi_api ();
     if (SetThreadDpiAwarenessContext_function != NULL)
         {
             // DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE =
@@ -175,6 +175,21 @@ error:
 int
 main (int argc, char *argv[])
 {
+    initialise_logger ();
+    log_debug ("Received %d arguments", argc);
+
+    if (argc == 1)
+        {
+            log_info ("Received no arguments. Choosing interactive mode.");
+        }
+    else
+        {
+            log_debug ("Received the following arguments: ");
+            for (size_t i = 1; i < argc; i++)
+                {
+                    log_debug ("%d : %s", i, argv[i]);
+                }
+        }
     // size_t optind;
     // BOOL isCaseInsensitive;
     // for (optind = 1; optind < argc && argv[optind][0] == '-'; optind++)
