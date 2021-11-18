@@ -1,5 +1,8 @@
+#include "Utils.h"
 #include "Log.h"
+#include "Version.h"
 #include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -18,7 +21,8 @@ convert_char_to_int (const char *str)
 
     const int range_error = errno == ERANGE;
     if (range_error)
-        log_error (1, "Range error occurred while converting to int. Check your "
+        log_error (1,
+                   "Range error occurred while converting to int. Check your "
                    "parameters.");
 
     return i;
@@ -39,4 +43,20 @@ split_args (char *inp, const char *sep)
             log_error (1, "Invalid argument: %s", inp);
         }
     return tmp;
+}
+
+void
+print_help (char *program_name)
+{
+    printf ("usage: %s [--version] [--help] [--debug] [<filename>]\n",
+            program_name);
+    printf ("\n\n");
+    printf ("    --version, -v    Print version of program and exit\n");
+    printf ("    --help, -h       Print this help text and exit\n");
+    printf ("    --debug      Enable Debug mode\n");
+}
+
+void print_version(char* program_name)
+{
+    printf("%s version %s\n", program_name, VERSION);
 }
