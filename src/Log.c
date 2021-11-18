@@ -13,18 +13,22 @@ log_info (char *message, ...)
     va_start (args, message);
     fprintf (stdout, LOGGING_INFO_PREEFIX);
     vfprintf (stdout, message, args);
-    fprintf(stdout, "\n");
-    va_end(args);
+    fprintf (stdout, "\n");
+    va_end (args);
 }
 
 void
-log_error (char *message, int should_exit, ...)
+log_error (int should_exit, char *message, ...)
 {
+    fprintf (stderr, "Error: ");
+
     va_list args;
     va_start (args, message);
+
     vfprintf (stderr, message, args);
-    fprintf(stderr, "\n");
+    fprintf (stderr, "\n");
     va_end (args);
+
     if (should_exit == 1)
         {
             log_debug ("Exiting with status code %d", 1);

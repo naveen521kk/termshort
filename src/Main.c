@@ -178,13 +178,14 @@ error:
 int
 main (int argc, char *argv[])
 {
-    initialise_logger ();
+    initialise_logger (argc, argv);
     log_debug ("Received %d arguments", argc);
     WCHAR *filename;
-    filename = calloc (MAX_PATH, sizeof (WCHAR *));
-    if (filename == NULL){
-        log_error("Memory error", 1);
-    }
+    filename = calloc (MAX_PATH, sizeof (WCHAR));
+    if (filename == NULL)
+        {
+            log_error (1, "Memory error");
+        }
     if (argc == 1)
         {
             log_info ("Received no arguments. Choosing interactive mode.");
@@ -205,7 +206,7 @@ main (int argc, char *argv[])
             positional_args = calloc (argc, sizeof (char *));
             if (positional_args == NULL)
                 {
-                    log_error ("Memory Error. Can't allocate memory.", 1);
+                    log_error (1, "Memory Error. Can't allocate memory.");
                 }
 
             for (optind = 1; optind < argc; optind++)
@@ -230,16 +231,16 @@ main (int argc, char *argv[])
                                 {
                                     continue; // handled else where.
                                 }
-                            log_error ("Invalid Argument: %s", 1, argv[optind]);
+                            log_error (1, "Invalid Argument: %s", argv[optind]);
                         }
                     else
                         {
-                            positional_args[positional_args_no] = malloc (
-                                (strlen (argv[optind]) + 1) * sizeof (char *));
+                            positional_args[positional_args_no] = calloc (
+                                (strlen (argv[optind]) + 1), sizeof (char *));
 
                             if (positional_args == NULL)
                                 {
-                                    log_error ("Memory Error.", 1);
+                                    log_error (1, "Memory Error.");
                                 }
 
                             positional_args[positional_args_no] = argv[optind];
@@ -254,17 +255,23 @@ main (int argc, char *argv[])
                         }
                     free (positional_args);
                     if (positional_args_no == 0)
-                        log_error ("Positional argument `file` is missing.", 1);
+                        log_error (1, "Positional argument `file` is missing.");
                     else
-                        log_error ("Multiple positional arguments found for `file`.", 1);
+                        log_error (
+                            1,
+                            "Multiple positional arguments found for `file`.");
                     return 1;
                 }
 
-
-            int nChars = MultiByteToWideChar (CP_UTF8, 0, positional_args[positional_args_no], -1, NULL, 0);
-            if (MultiByteToWideChar(CP_UTF8, 0, positional_args[positional_args_no], -1, (WCHAR*)filename, nChars) != nChars){
-                log_error("Cannot convert string", 1);
-            }
+            int nChars = MultiByteToWideChar (
+                CP_UTF8, 0, positional_args[positional_args_no], -1, NULL, 0);
+            if (MultiByteToWideChar (CP_UTF8, 0,
+                                     positional_args[positional_args_no], -1,
+                                     (WCHAR *)filename, nChars)
+                != nChars)
+                {
+                    log_error (1, "Cannot convert string");
+                }
 
             for (size_t i = 0; i < positional_args_no; i++)
                 {
@@ -272,7 +279,7 @@ main (int argc, char *argv[])
                 }
             free (positional_args);
         }
-    int output = grab_screenshot (1, 1);
+    int output = grab_screenshot (1, 0);
     free (filename);
     return output;
 }

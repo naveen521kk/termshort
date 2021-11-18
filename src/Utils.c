@@ -18,9 +18,8 @@ convert_char_to_int (const char *str)
 
     const int range_error = errno == ERANGE;
     if (range_error)
-        log_error ("Range error occurred while converting to int. Check your "
-                   "parameters.",
-                   1);
+        log_error (1, "Range error occurred while converting to int. Check your "
+                   "parameters.");
 
     return i;
 }
@@ -32,12 +31,12 @@ split_args (char *inp, const char *sep)
     tmp = strtok (inp, sep);
     if (!*tmp)
         {
-            log_error ("Invalid argument: %s", 1, inp);
+            log_error (1, "Invalid argument: %s", inp);
         }
     tmp = strtok (NULL, sep);
     if (!tmp)
         {
-            log_error ("Invalid argument: %s", 1, inp);
+            log_error (1, "Invalid argument: %s", inp);
         }
     return tmp;
 }
