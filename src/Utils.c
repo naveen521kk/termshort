@@ -56,7 +56,8 @@ print_help (char *program_name)
     printf ("    --debug      Enable Debug mode\n");
 }
 
-void print_version(char* program_name)
+void
+print_version (char *program_name)
 {
-    printf("%s version %s\n", program_name, VERSION);
+    printf ("%s version %s\n", program_name, VERSION);
 }

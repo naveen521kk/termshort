@@ -47,10 +47,11 @@ main (int argc, char *argv[])
                 {
                     if (starts_with (argv[optind], "--"))
                         {
-                            if (starts_with (argv[optind], "--help")){
-                                print_help(argv[0]);
-                                return 129;
-                            }
+                            if (starts_with (argv[optind], "--help"))
+                                {
+                                    print_help (argv[0]);
+                                    return 129;
+                                }
                             if (starts_with (argv[optind], "--width"))
                                 {
                                     width = convert_char_to_int (
@@ -69,25 +70,27 @@ main (int argc, char *argv[])
                                 {
                                     continue; // handled else where.
                                 }
-                            if (starts_with(argv[optind], "--version"))
-                            {
-                                print_version(argv[0]);
-                                return 0;
-                            }
-                            print_help(argv[0]);
+                            if (starts_with (argv[optind], "--version"))
+                                {
+                                    print_version (argv[0]);
+                                    return 0;
+                                }
+                            print_help (argv[0]);
                             log_error (1, "Invalid Argument: %s", argv[optind]);
                         }
                     else if (starts_with (argv[optind], "-"))
-                    {
-                        if (starts_with (argv[optind], "-h")){
-                                print_help(argv[0]);
-                                return 129;
+                        {
+                            if (starts_with (argv[optind], "-h"))
+                                {
+                                    print_help (argv[0]);
+                                    return 129;
+                                }
+                            if (starts_with (argv[optind], "-v"))
+                                {
+                                    print_version (argv[0]);
+                                    return 0;
+                                }
                         }
-                        if (starts_with (argv[optind], "-v")){
-                                print_version(argv[0]);
-                                return 0;
-                        }
-                    }
                     else
                         {
                             positional_args[positional_args_no] = calloc (
