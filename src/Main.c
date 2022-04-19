@@ -23,6 +23,7 @@ main (int argc, char *argv[])
     if (argc == 1)
         {
             log_info ("Received no arguments. Choosing interactive mode.");
+            filename = L"default.bmp";
         }
     else
         {
