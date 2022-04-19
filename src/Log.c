@@ -60,7 +60,7 @@ log_debug (char *message, ...)
 void
 initialise_logger (int argc, char *argv[])
 {
-    for (size_t i = 1; i < argc; i++)
+    for (int i = 1; i < argc; i++)
         {
             if (0 == strcmp (argv[i], "--debug"))
                 {
