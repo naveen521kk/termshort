@@ -1,5 +1,2 @@
-screenshotter.exe: main.c
-	gcc -g $? -o $@ -lgdi32 -luser32
-
-format: main.c
+format: src/*.c src/*.h
 	clang-format -i $?
