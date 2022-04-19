@@ -17,7 +17,7 @@ get_thread_dpi_api ()
 }
 
 int
-grab_screenshot (int all_screens, int includeLayeredWindows)
+grab_screenshot (int all_screens, int includeLayeredWindows, WCHAR *filename)
 {
     int x = 0, y = 0, width, height;
     HBITMAP bitmap;
@@ -124,8 +124,8 @@ grab_screenshot (int all_screens, int includeLayeredWindows)
                (BITMAPINFO *)&bi, DIB_RGB_COLORS);
 
     // A file is created, this is where we will save the screen capture.
-    hFile = CreateFile (L"captureqwsx.bmp", GENERIC_WRITE, 0, NULL,
-                        CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    hFile = CreateFile (filename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
+                        FILE_ATTRIBUTE_NORMAL, NULL);
 
     // Add the size of the headers to the size of the bitmap to get the total
     // file size.

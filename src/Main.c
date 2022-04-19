@@ -96,7 +96,7 @@ main (int argc, char *argv[])
                             positional_args[positional_args_no] = calloc (
                                 (strlen (argv[optind]) + 1), sizeof (char *));
 
-                            if (positional_args == NULL)
+                            if (positional_args[positional_args_no] == NULL)
                                 {
                                     log_error (1, "Memory Error.");
                                 }
@@ -120,12 +120,20 @@ main (int argc, char *argv[])
                             "Multiple positional arguments found for `file`.");
                     return 1;
                 }
+            /*
+            positional_args_no contains number of positional args
+            which means, if positional_args_no is 1 then we must access
+            the 0th (n - 1)th element
+            */
+            log_debug ("Got filename as: %s",
+                       positional_args[positional_args_no - 1]);
 
             int nChars = MultiByteToWideChar (
-                CP_UTF8, 0, positional_args[positional_args_no], -1, NULL, 0);
+                CP_UTF8, 0, positional_args[positional_args_no - 1], -1, NULL,
+                0);
             if (MultiByteToWideChar (CP_UTF8, 0,
-                                     positional_args[positional_args_no], -1,
-                                     (WCHAR *)filename, nChars)
+                                     positional_args[positional_args_no - 1],
+                                     -1, filename, nChars)
                 != nChars)
                 {
                     log_error (1, "Cannot convert string");
@@ -137,7 +145,8 @@ main (int argc, char *argv[])
                 }
             free (positional_args);
         }
-    int output = grab_screenshot (1, 0);
+    int output = grab_screenshot (1, 0, filename);
+    log_info ("Screenshot saved at '%ls`", filename);
     free (filename);
     return output;
 }
