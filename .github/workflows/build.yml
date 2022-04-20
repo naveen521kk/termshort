@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install meson
-      run: pip install -U meson ninja
+      run: pip install -U meson==0.62 ninja
     - name: Configure Meson
       run: meson _build --buildtype=release --vsenv --prefix=C:\prefix-install
     - name: Build
