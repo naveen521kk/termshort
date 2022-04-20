@@ -16,7 +16,7 @@ jobs:
     - name: Install meson
       run: pip install -U meson ninja
     - name: Configure Meson
-      run: meson configure _build --buildtype=release --vsenv --prefix=C:\prefix-install
+      run: meson _build --buildtype=release --vsenv --prefix=C:\prefix-install
     - name: Build
       run: meson compile -C _build
     - name: Install
