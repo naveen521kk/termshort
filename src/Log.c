@@ -20,7 +20,7 @@ log_info (char *message, ...)
 void
 log_error (int should_exit, char *message, ...)
 {
-    fprintf (stderr, "Error: ");
+    fprintf (stderr, LOGGING_ERROR_PREFIX);
 
     va_list args;
     va_start (args, message);
