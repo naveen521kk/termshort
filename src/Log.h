@@ -1,4 +1,5 @@
 #pragma once
+#define LOGGING_ERROR_PREFIX "Error: "
 #define LOGGING_DEBUG_PREFIX "DEBUG: "
 #define LOGGING_INFO_PREEFIX "INFO: "
 #define DEBUG_MODE 0;
