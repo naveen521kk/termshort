@@ -17,7 +17,7 @@ convert_char_to_int (const char *str)
 {
     errno = 0;
     char *end;
-    const long i = strtol (str, &end, 10);
+    const int i = strtol (str, &end, 10);
 
     const int range_error = errno == ERANGE;
     if (range_error)

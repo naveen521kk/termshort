@@ -20,11 +20,10 @@ log_info (char *message, ...)
 void
 log_error (int should_exit, char *message, ...)
 {
-    fprintf (stderr, "Error: ");
-
     va_list args;
     va_start (args, message);
 
+    fprintf (stderr, LOGGING_ERROR_PREFIX);
     vfprintf (stderr, message, args);
     fprintf (stderr, "\n");
     va_end (args);
